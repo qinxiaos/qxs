@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哆啦の口袋 | 我的二次元小天地</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        doraemon: {
+                            blue: '#0066CC',      // 哆啦A梦蓝
+                            lightblue: '#7EC0EE', // 浅蓝
+                            red: '#E63946',       // 铃铛红
+                            yellow: '#FFD166',    // 铃铛黄
+                            white: '#F8F9FA'      // 白色
+                        }
+                    },
+                    fontFamily: {
+                        cartoon: ['Comic Sans MS', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'doraemon-bg': "url('https://picsum.photos/id/145/1920/1080')",
+                        'cloud-pattern': "url('https://picsum.photos/id/186/1000/1000')",
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 自定义样式 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow-dora {
+                text-shadow: 0 2px 4px rgba(0, 102, 204, 0.3);
+            }
+            .bell-shadow {
+                filter: drop-shadow(0 4px 3px rgba(255, 209, 102, 0.4));
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-8px) rotate(1deg);
+                box-shadow: 0 15px 30px rgba(0, 102, 204, 0.2);
+            }
+            .cloud-bg {
+                background-color: rgba(255, 255, 255, 0.85);
+                background-blend-mode: overlay;
+            }
+        }
+    </style>
+</head>
+<body class="bg-doraemon-white font-cartoon text-doraemon-blue">
+    <!-- 导航栏 -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
+        <nav class="bg-white/90 backdrop-blur-sm border-b border-doraemon-lightblue/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center space-x-2">
+                            <i class="fa fa-bell text-doraemon-yellow text-xl bell-shadow animate-spin-slow"></i>
+                            <span class="font-bold text-xl text-doraemon-blue">哆啦の口袋</span>
+                        </a>
+                    </div>
+                    
+                    <!-- 桌面端导航 -->
+                    <div class="hidden md:flex items-center space-x-8">
+                        <a href="#" class="text-doraemon-blue hover:text-doraemon-red font-medium">首页</a>
+                        <a href="#articles" class="text-doraemon-blue hover:text-doraemon-red font-medium">漫评</a>
+                        <a href="#collection" class="text-doraemon-blue hover:text-doraemon-red font-medium">收藏</a>
+                        <a href="#about" class="text-doraemon-blue hover:text-doraemon-red font-medium">关于我</a>
+                        <a href="#message" class="text-doraemon-blue hover:text-doraemon-red font-medium">留言板</a>
+                    </div>
+                    
+                    <!-- 移动端菜单按钮 -->
+                    <div class="md:hidden flex items-center">
+                        <button id="menuBtn" class="text-doraemon-blue hover:text-doraemon-red">
+                            <i class="fa fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div id="mobileMenu" class="md:hidden hidden bg-white border-b border-doraemon-lightblue/30">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-doraemon-blue hover:bg-doraemon-lightblue/10 hover:text-doraemon-red">首页</a>
+                    <a href="#articles" class="block px-3 py-2 rounded-md text-base font-medium text-doraemon-blue hover:bg-doraemon-lightblue/10 hover:text-doraemon-red">漫评</a>
+                    <a href="#collection" class="block px-3 py-2 rounded-md text-base font-medium text-doraemon-blue hover:bg-doraemon-lightblue/10 hover:text-doraemon-red">收藏</a>
+                    <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-doraemon-blue hover:bg-doraemon-lightblue/10 hover:text-doraemon-red">关于我</a>
+                    <a href="#message" class="block px-3 py-2 rounded-md text-base font-medium text-doraemon-blue hover:bg-doraemon-lightblue/10 hover:text-doraemon-red">留言板</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 英雄区/封面 -->
+    <section class="pt-24 pb-16 md:pt-32 md:pb-24 bg-doraemon-bg bg-cover bg-center relative">
+        <div class="absolute inset-0 bg-doraemon-blue/40"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-shadow-dora mb-6">
+                    哆啦A梦<span class="text-doraemon-yellow">的奇妙世界</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-white text-shadow-dora mb-8">
+                    分享哆啦A梦的故事、收藏和二次元日常，一起回到童年的美好时光
+                </p>
+                <a href="#articles" class="inline-block bg-doraemon-red hover:bg-doraemon-red/90 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300">
+                    进入口袋 <i class="fa fa-angle-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 文章列表区 -->
+    <section id="articles" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-block mb-4">
+                    <i class="fa fa-book text-doraemon-yellow text-3xl bell-shadow"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-doraemon-blue mb-4">哆啦漫评</h2>
+                <p class="text-doraemon-blue/80 max-w-2xl mx-auto">分享我对哆啦A梦各版本、剧场版的解读和感悟，重温经典的感动</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 文章卡片1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover border border-doraemon-lightblue/20">
+                    <img src="https://picsum.photos/id/100/600/400" alt="哆啦A梦原作分析" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-doraemon-blue/70 mb-3">
+                            <span>2025.02.15</span>
+                            <span class="mx-2">•</span>
+                            <span>原作解析</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-doraemon-blue mb-3 hover:text-doraemon-red transition-colors">
+                            <a href="#">藤子·F·不二雄的创作哲学：哆啦A梦的温柔内核</a>
+                        </h3>
+                        <p class="text-doraemon-blue/80 mb-4">
+                            深入分析哆啦A梦原作的创作背景和精神内核，解读藤子老师想要传递的温暖与希望...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-doraemon-red font-medium hover:text-doraemon-blue">
+                            阅读全文 <i class="fa fa-long-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 文章卡片2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover border border-doraemon-lightblue/20">
+                    <img src="https://picsum.photos/id/110/600/400" alt="剧场版回顾" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-doraemon-blue/70 mb-3">
+                            <span>2025.02.08</span>
+                            <span class="mx-2">•</span>
+                            <span>剧场版</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-doraemon-blue mb-3 hover:text-doraemon-red transition-colors">
+                            <a href="#">盘点最经典的5部哆啦A梦剧场版，哪部是你的童年？</a>
+                        </h3>
+                        <p class="text-doraemon-blue/80 mb-4">
+                            从《大雄的恐龙》到《伴我同行》，回顾那些陪伴我们成长的经典剧场版，每一部都充满回忆...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-doraemon-red font-medium hover:text-doraemon-blue">
+                            阅读全文 <i class="fa fa-long-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 文章卡片3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover border border-doraemon-lightblue/20">
+                    <img src="https://picsum.photos/id/120/600/400" alt="道具解析" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-doraemon-blue/70 mb-3">
+                            <span>2025.02.01</span>
+                            <span class="mx-2">•</span>
+                            <span>道具解析</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-doraemon-blue mb-3 hover:text-doraemon-red transition-colors">
+                            <a href="#">哆啦A梦的神奇道具：如果现实中存在会怎样？</a>
+                        </h3>
+                        <p class="text-doraemon-blue/80 mb-4">
+                            任意门、时光机、竹蜻蜓...解析那些令人向往的神奇道具，探讨它们的科学可能性与哲学意义...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-doraemon-red font-medium hover:text-doraemon-blue">
+                            阅读全文 <i class="fa fa-long-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 文章卡片4 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover border border-doraemon-lightblue/20">
+                    <img src="https://picsum.photos/id/130/600/400" alt="角色分析" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-doraemon-blue/70 mb-3">
+                            <span>2025.01.20</span>
+                            <span class="mx-2">•</span>
+                            <span>角色分析</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-doraemon-blue mb-3 hover:text-doraemon-red transition-colors">
+                            <a href="#">大雄的成长：从"废柴"到真正的勇者</a>
+                        </h3>
+                        <p class="text-doraemon-blue/80 mb-4">
+                            深度分析大雄的人物弧光，看似懦弱的他其实拥有最珍贵的品质，这才是哆啦A梦选择他的原因...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-doraemon-red font-medium hover:text-doraemon-blue">
+                            阅读全文 <i class="fa fa-long-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 文章卡片5 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover border border-doraemon-lightblue/20">
+                    <img src="https://picsum.photos/id/140/600/400" alt="配音演员" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-doraemon-blue/70 mb-3">
+                            <span>2025.01.10</span>
+                            <span class="mx-2">•</span>
+                            <span>幕后故事</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-doraemon-blue mb-3 hover:text-doraemon-red transition-colors">
+                            <a href="#">哆啦A梦的声音：历代配音演员的故事</a>
+                        </h3>
+                        <p class="text-doraemon-blue/80 mb-4">
+                            从大山羡代到水田山葵，不同时期哆啦A梦的配音风格变化，每一种声音都承载着一代人的记忆...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-doraemon-red font-medium hover:text-doraemon-blue">
+                            阅读全文 <i class="fa fa-long-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 文章卡片6 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover border border-doraemon-lightblue/20">
+                    <img src="https://picsum.photos/id/150/600/400" alt="周边收藏" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-doraemon-blue/70 mb-3">
+                            <span>2025.01.01</span>
+                            <span class="mx-2">•</span>
+                            <span>收藏分享</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-doraemon-blue mb-3 hover:text-doraemon-red transition-colors">
+                            <a href="#">新手必看：哆啦A梦周边收藏避坑指南</a>
+                        </h3>
+                        <p class="text-doraemon-blue/80 mb-4">
+                            作为收藏多年的老玩家，分享辨别正版周边、收藏保值、收纳展示的实用技巧...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-doraemon-red font-medium hover:text-doraemon-blue">
+                            阅读全文 <i class="fa fa-long-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block border border-doraemon-blue text-doraemon-blue hover:bg-doraemon-blue hover:text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300">
+                    查看更多漫评 <i class="fa fa-angle-down ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 收藏展示区 -->
+    <section id="collection" class="py-16 bg-cloud-pattern cloud-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-block mb-4">
+                    <i class="fa fa-star text-doraemon-yellow text-3xl bell-shadow"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-doraemon-blue mb-4">珍藏展示</h2>
+                <p class="text-doraemon-blue/80 max-w-2xl mx-auto">分享我的哆啦A梦收藏，每一件都承载着童年的美好回忆</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- 收藏物品1 -->
+                <div class="rounded-lg overflow-hidden shadow-md card-hover animate-float">
+                    <img src="https://picsum.photos/id/200/400/400" alt="手办收藏" class="w-full h-48 object-cover">
+                    <div class="p-4 bg-white text-center">
+                        <h3 class="font-bold text-doraemon-blue">限量版手办</h3>
+                    </div>
+                </div>
+                
+                <!-- 收藏物品2 -->
+                <div class="rounded-lg overflow-hidden shadow-md card-hover animate-float" style="animation-delay: 0.2s;">
+                    <img src="https://picsum.photos/id/210/400/400" alt="漫画收藏" class="w-full h-48 object-cover">
+                    <div class="p-4 bg-white text-center">
+                        <h3 class="font-bold text-doraemon-blue">原版漫画</h3>
+                    </div>
+                </div>
+                
+                <!-- 收藏物品3 -->
+                <div class="rounded-lg overflow-hidden shadow-md card-hover animate-float" style="animation-delay: 0.4s;">
+                    <img src="https://picsum.photos/id/220/400/400" alt="剧场版海报" class="w-full h-48 object-cover">
+                    <div class="p-4 bg-white text-center">
+                        <h3 class="font-bold text-doraemon-blue">剧场版海报</h3>
+                    </div>
+                </div>
+                
+                <!-- 收藏物品4 -->
+                <div class="rounded-lg overflow-hidden shadow-md card-hover animate-float" style="animation-delay: 0.6s;">
+                    <img src="https://picsum.photos/id/230/400/400" alt="周边杂货" class="w-full h-48 object-cover">
+                    <div class="p-4 bg-white text-center">
+                        <h3 class="font-bold text-doraemon-blue">限定周边</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <a href="#" class="inline-block bg-doraemon-yellow hover:bg-doraemon-yellow/90 text-doraemon-blue font-medium px-6 py-3 rounded-lg transition-colors duration-300">
+                    查看完整收藏 <i class="fa fa-gallery ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于博主 -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <img src="https://picsum.photos/id/300/800/600" alt="博主照片" class="rounded-xl shadow-lg w-full h-auto object-cover">
+                </div>
+                <div>
+                    <div class="inline-block mb-6">
+                        <i class="fa fa-user text-doraemon-yellow text-3xl bell-shadow"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-doraemon-blue mb-6">关于我</h2>
+                    <p class="text-doraemon-blue/80 mb-4 leading-relaxed">
+                        大家好，我是小哆，一名资深哆啦A梦爱好者，从童年第一次看哆啦A梦动画开始，就深深爱上了这个圆滚滚的蓝色机器人。
+                    </p>
+                    <p class="text-doraemon-blue/80 mb-6 leading-relaxed">
+                        这个博客是我分享哆啦A梦相关内容的小天地，在这里你可以看到我对哆啦A梦的解读、收藏分享、剧场版影评，还有各种有趣的周边推荐。希望能和同样喜欢哆啦A梦的朋友们交流分享，一起守护这份童年的美好。
+                    </p>
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <div class="bg-doraemon-lightblue/10 rounded-lg px-4 py-3 shadow-sm border border-doraemon-lightblue/20">
+                            <span class="block text-2xl font-bold text-doraemon-blue">15+</span>
+                            <span class="text-doraemon-blue/80 text-sm">收藏年份</span>
+                        </div>
+                        <div class="bg-doraemon-lightblue/10 rounded-lg px-4 py-3 shadow-sm border border-doraemon-lightblue/20">
+                            <span class="block text-2xl font-bold text-doraemon-blue">500+</span>
+                            <span class="text-doraemon-blue/80 text-sm">周边藏品</span>
+                        </div>
+                        <div class="bg-doraemon-lightblue/10 rounded-lg px-4 py-3 shadow-sm border border-doraemon-lightblue/20">
+                            <span class="block text-2xl font-bold text-doraemon-blue">30+</span>
+                            <span class="text-doraemon-blue/80 text-sm">剧场版观影</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-doraemon-lightblue/20 flex items-center justify-center text-doraemon-blue hover:bg-doraemon-blue hover:text-white transition-colors duration-300">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-doraemon-lightblue/20 flex items-center justify-center text-doraemon-blue hover:bg-doraemon-blue hover:text-white transition-colors duration-300">
+                            <i class="fa fa-wechat"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-doraemon-lightblue/20 flex items-center justify-center text-doraemon-blue hover:bg-doraemon-blue hover:text-white transition-colors duration-300">
+                            <i class="fa fa-bilibili"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-doraemon-lightblue/20 flex items-center justify-center text-doraemon-blue hover:bg-doraemon-blue hover:text-white transition-colors duration-300">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 留言板 -->
+    <section id="message" class="py-16 bg-doraemon-lightblue/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-block mb-4">
+                    <i class="fa fa-comments text-doraemon-yellow text-3xl bell-shadow"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-doraemon-blue mb-4">留言板</h2>
+                <p class="text-doraemon-blue/80 max-w-2xl mx-auto">欢迎留下你的想法和感受，和同好们一起交流</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <!-- 留言表单 -->
+                <form class="bg-white rounded-xl shadow-md p-6 mb-8 border border-doraemon-lightblue/20">
+                    <div class="mb-4">
+                        <label for="name" class="block text-doraemon-blue font-medium mb-2">昵称</label>
+                        <input type="text" id="name" class="w-full px-4 py-2 border border-doraemon-lightblue/30 rounded-lg focus:ring-2 focus:ring-doraemon-yellow focus:border-transparent" placeholder="请输入你的昵称">
+                    </div>
+                    <div class="mb-4">
+                        <label for="message" class="block text-doraemon-blue font-medium mb-2">留言内容</label>
+                        <textarea id="message" rows="4" class="w-full px-4 py-2 border border-doraemon-lightblue/30 rounded-lg focus:ring-2 focus:ring-doraemon-yellow focus:border-transparent" placeholder="分享你对哆啦A梦的喜爱..."></textarea>
+                    </div>
+                    <button type="submit" class="bg-doraemon-blue hover:bg-doraemon-blue/90 text-white font-medium px-6 py-2 rounded-lg transition-colors duration-300">
+                        提交留言 <i class="fa fa-paper-plane ml-2"></i>
+                    </button>
+                </form>
+                
+                <!-- 留言列表 -->
+                <div class="space-y-4">
+                    <!-- 留言1 -->
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-doraemon-lightblue/20">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-doraemon-blue">大雄的小叮当</h4>
+                            <span class="text-sm text-doraemon-blue/60">2025.02.14</span>
+                        </div>
+                        <p class="text-doraemon-blue/80">从小就喜欢哆啦A梦，现在长大了依然会重温，每次看都觉得特别治愈❤️</p>
+                    </div>
+                    
+                    <!-- 留言2 -->
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-doraemon-lightblue/20">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-doraemon-blue">蓝胖子爱好者</h4>
+                            <span class="text-sm text-doraemon-blue/60">2025.02.10</span>
+                        </div>
+                        <p class="text-doraemon-blue/80">博主的收藏太赞了！我也收集了很多哆啦A梦的周边，希望能交流一下～</p>
+                    </div>
+                    
+                    <!-- 留言3 -->
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-doraemon-lightblue/20">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-doraemon-blue">时光机驾驶员</h4>
+                            <span class="text-sm text-doraemon-blue/60">2025.02.05</span>
+                        </div>
+                        <p class="text-doraemon-blue/80">最喜欢的剧场版是《大雄的月球探险记》，画面太美了，音乐也超好听！</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-8">
+                    <a href="#" class="text-doraemon-blue hover:text-doraemon-red font-medium">
+                        查看更多留言 <i class="fa fa-angle-down ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-doraemon-blue text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fa fa-bell text-doraemon-yellow text-xl bell-shadow"></i>
+                        <span class="font-bold text-xl text-white">哆啦の口袋</span>
+                    </div>
+                    <p class="text-white/80 mb-4">
+                        一个热爱哆啦A梦的普通爱好者，分享关于蓝胖子的一切美好
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white/80 hover:text-white transition-colors duration-300">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="text-white/80 hover:text-white transition-colors duration-300">
+                            <i class="fa fa-wechat"></i>
+                        </a>
+                        <a href="#" class="text-white/80 hover:text-white transition-colors duration-300">
+                            <i class="fa fa-bilibili"></i>
+                        </a>
+                        <a href="#" class="text-white/80 hover:text-white transition-colors duration-300">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">首页</a></li>
+                        <li><a href="#articles" class="text-white/80 hover:text-white transition-colors duration-300">哆啦漫评</a></li>
+                        <li><a href="#collection" class="text-white/80 hover:text-white transition-colors duration-300">珍藏展示</a></li>
+                        <li><a href="#about" class="text-white/80 hover:text-white transition-colors duration-300">关于我</a></li>
+                        <li><a href="#message" class="text-white/80 hover:text-white transition-colors duration-300">留言板</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-4">相关资源</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">哆啦A梦官网</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">藤子纪念馆</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">剧场版时间表</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">周边购买指南</a></li>
+                        <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-300">粉丝交流群</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/20 pt-8 mt-8 text-center text-white/70 text-sm">
+                <p>© 2025 哆啦の口袋 版权所有 | 热爱哆啦A梦，守护童年的美好</p>
+                <p class="mt-2">本博客仅为个人爱好分享，无商业用途</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-doraemon-red hover:bg-doraemon-red/90 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 invisible">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white', 'shadow-md');
+                navbar.classList.remove('bg-white/90');
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-md');
+                navbar.classList.add('bg-white/90');
+            }
+        });
+        
+        // 返回顶部按钮
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'invisible');
+                backToTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'invisible');
+                backToTopBtn.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // 关闭移动端菜单
+                    mobileMenu.classList.add('hidden');
+                    
+                    // 平滑滚动到目标位置
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
